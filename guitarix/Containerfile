@@ -1,0 +1,14 @@
+FROM docker.io/ubuntu:rolling
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		alsa-utils pipewire-audio pipewire-jack \
+		libgtk-3-bin \
+		guitarix \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /root/.config/guitarix
+EXPOSE 8085/tcp
+#CMD nohup broadwayd :5 &> /var/log/broadway.log & GDK_BACKEND=broadway BROADWAY_DISPLAY=:5 pw-jack guitarix --log-terminal
+CMD pw-jack guitarix -N --log-terminal

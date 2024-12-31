@@ -1,0 +1,14 @@
+FROM docker.io/rust:slim
+
+ARG DEBIAN_FRONTEND=noninteractive
+ENV CARGO_REGISTRIES_CRATES_IO_PROTOCOL="sparse"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		alsa-utils pipewire-audio \
+		pkg-config \
+		libasound2-dev libpulse-dev \
+		libavahi-compat-libdnssd-dev \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN cargo install librespot
+CMD RUST_LOG=debug librespot --enable-volume-normalisation --initial-volume 80 --bitrate 320 --format s16 -v
